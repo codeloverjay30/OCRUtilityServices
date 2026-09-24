@@ -57,6 +57,9 @@ ai-rules.md
 .cursorrules
 github-copilot-instructions.md
 
+# repomix
+.repomixignore
+
 # scripts
 *.ps1
 *.psm1
