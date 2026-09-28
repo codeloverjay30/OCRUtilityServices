@@ -3,6 +3,7 @@ using OcrResult = OCRUtilityServices.Models.OcrResult;
 
 
 #if WINDOWS
+using Windows.Globalization;
 using CoordinateUtilityServices;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
@@ -28,11 +29,20 @@ public sealed class OCRUtilityService : IOCRUtilityService
         return result.Text;
     }
 
-    /// <summary>
-    /// Recognizes text and text-line locations from an encoded image.
-    /// </summary>
     public async Task<OcrResult> RecognizeAsync(
         byte[] imageBuffer,
+        CancellationToken cancellationToken = default)
+    {
+        return await RecognizeAsync(
+            imageBuffer,
+            "zh-tw",
+            cancellationToken)
+            .ConfigureAwait(false);
+    }
+    /// <inheritdoc/>
+    public async Task<OcrResult> RecognizeAsync(
+        byte[] imageBuffer,
+        string languageTag,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(imageBuffer);
@@ -63,10 +73,12 @@ public sealed class OCRUtilityService : IOCRUtilityService
 
         cancellationToken.ThrowIfCancellationRequested();
 
+        Language language = new(languageTag);
+
         OcrEngine engine =
-            OcrEngine.TryCreateFromUserProfileLanguages()
+            OcrEngine.TryCreateFromLanguage(language)
             ?? throw new InvalidOperationException(
-                "Windows OCR engine initialization failed.");
+                $"Windows OCR engine initialization failed for language '{language.LanguageTag}'.");
 
         var recognized = await engine.RecognizeAsync(bitmap);
 
