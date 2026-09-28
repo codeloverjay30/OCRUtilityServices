@@ -227,6 +227,38 @@ public sealed class OCRUtilityServiceIntegrationTests
                 "the cropped task region visibly contains the text '任務'");
     }
 
+    [Fact]
+    public async Task RecognizeAsync_OmniAppiumRuntimeScreenshot_WithTraditionalChinese_ShouldRecognizeTaskText()
+    {
+        string imagePath = _fileSystem.Path.Combine(
+            AppContext.BaseDirectory,
+            "TestData",
+            "omniappium-runtime-ocr-diagnostic.png");
+
+        _fileSystem.File
+            .Exists(imagePath)
+            .Should()
+            .BeTrue(
+                $"the runtime OCR diagnostic image must exist at '{imagePath}'");
+
+        byte[] imageBuffer =
+            await _fileSystem.File.ReadAllBytesAsync(imagePath);
+
+        var sut = new OCRUtilityService();
+
+        OcrResult result =
+            await sut.RecognizeAsync(
+                imageBuffer,
+                "zh-TW");
+
+        WriteDiagnosticOutput(result);
+
+        result.Text
+            .Should()
+            .NotBeNullOrWhiteSpace(
+                "the captured OmniAppium runtime screenshot contains clearly visible Traditional Chinese text");
+    }
+
     private static string RemoveWhiteSpace(string value)
     {
         ArgumentNullException.ThrowIfNull(value);

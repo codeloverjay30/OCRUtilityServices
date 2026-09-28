@@ -244,6 +244,94 @@ public sealed class OcrTextMatcherTests
                 "The OCR result contains a null text line.*");
     }
 
+    [Fact]
+    public void FindUnique_WhenMatchedTextContainsInterCharacterWhitespace_ShouldReturnLine()
+    {
+        OcrTextLine expectedLine =
+            CreateLine("任 務");
+
+        OcrResult result =
+            CreateResult(expectedLine);
+
+        var sut = new OcrTextMatcher();
+
+        OcrTextLine actual =
+            sut.FindUnique(
+                result,
+                "任務",
+            OcrTextMatchMode.NormalizedContains);
+
+
+        actual.Should()
+            .BeSameAs(expectedLine);
+    }
+
+    [Fact]
+    public void FindUnique_WhenTargetIsContainedInNoisyOcrLine_ShouldReturnLine()
+    {
+        OcrTextLine expectedLine =
+            CreateLine("冖 | 一 卜 任 務");
+
+        OcrResult result =
+            CreateResult(expectedLine);
+
+        var sut = new OcrTextMatcher();
+
+        OcrTextLine actual =
+            sut.FindUnique(
+                result,
+                "任務",
+            OcrTextMatchMode.NormalizedContains);
+
+        actual.Should()
+            .BeSameAs(expectedLine);
+    }
+
+    [Fact]
+public void FindUnique_WhenNormalizedContainsMatchesMultipleLines_ThrowsExpectedException()
+{
+    // Arrange
+    OcrResult result = CreateResult(
+        CreateLine("每日 任 務"),
+        CreateLine("主線 任 務"));
+
+    // Act
+    Action act = () => _sut.FindUnique(
+        result,
+        "任務",
+        OcrTextMatchMode.NormalizedContains);
+
+    // Assert
+    act.Should()
+        .Throw<InvalidOperationException>()
+        .WithMessage(
+            "OCR target '任務' is ambiguous: multiple matching lines were found.");
+}
+
+    [Fact]
+    public void FindUnique_WhenMatchModeIsUnsupported_ThrowsExpectedException()
+    {
+        // Arrange
+        OcrResult result = CreateResult(
+            CreateLine("任務"));
+
+        OcrTextMatchMode unsupportedMatchMode =
+            (OcrTextMatchMode)999;
+
+        // Act
+        Action act = () => _sut.FindUnique(
+            result,
+            "任務",
+            unsupportedMatchMode);
+
+        // Assert
+        act.Should()
+            .Throw<ArgumentOutOfRangeException>()
+            .WithMessage(
+                "*The specified OCR text match mode is not supported.*matchMode*");
+    }
+
+
     private static OcrResult CreateResult(
         params OcrTextLine[] lines)
     {
