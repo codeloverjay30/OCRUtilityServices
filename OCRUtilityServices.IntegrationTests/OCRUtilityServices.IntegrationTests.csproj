@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OCRUtilityServices\OCRUtilityServices.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\TestData\ocr-hello.png" Link="TestData\ocr-hello.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\TestData\game-main-screen.png" Link="TestData\game-main-screen.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\TestData\game-main-screen-task-roi.png" Link="TestData\game-main-screen-task-roi.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\TestData\game-main-screen-task-roi-3x.png" Link="TestData\game-main-screen-task-roi-3x.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
