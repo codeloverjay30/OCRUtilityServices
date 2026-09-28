@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="OCRUtilityServices.IntegrationTests/OCRUtilityServices.IntegrationTests.csproj" />
   <Project Path="OCRUtilityServices.Tests/OCRUtilityServices.Tests.csproj" />
   <Project Path="OCRUtilityServices/OCRUtilityServices.csproj" />
 </Solution>
