@@ -28,5 +28,6 @@
     <None Include="..\TestData\game-main-screen.png" Link="TestData\game-main-screen.png" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\TestData\game-main-screen-task-roi.png" Link="TestData\game-main-screen-task-roi.png" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\TestData\game-main-screen-task-roi-3x.png" Link="TestData\game-main-screen-task-roi-3x.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\TestData\omniappium-runtime-ocr-diagnostic.png" Link="TestData\omniappium-runtime-ocr-diagnostic.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

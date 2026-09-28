@@ -13,3 +13,7 @@ Utility packages to perform OCR and analyze its results
 ## 2.0.0
 ### Added
 + Add OCR for different languages
+
+## 2.1.0
+### Fixed
++ set mode of text matching
