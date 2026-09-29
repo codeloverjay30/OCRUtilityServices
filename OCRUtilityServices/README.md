@@ -25,3 +25,7 @@ Utility packages to perform OCR and analyze its results
 ## 2.3.0
 ### Added
 + Can determine the region of OCR for text matching.
+
+## 2.4.0
+### Fixed
++ Get the bounding rectangle of target text instead the whole line which contains target text. See issue `#1`.
