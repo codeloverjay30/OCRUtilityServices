@@ -271,25 +271,26 @@ public sealed class OcrTextMatcherTests
     }
 
     [Fact]
-public void FindUnique_WhenNormalizedContainsMatchesMultipleLines_ThrowsExpectedException()
-{
-    // Arrange
-    OcrResult result = CreateResult(
-        CreateLine("每日 任 務"),
-        CreateLine("主線 任 務"));
+    public void FindUnique_WhenNormalizedContainsMatchesMultipleLines_ThrowsExpectedException()
+    {
+        // Arrange
+        OcrResult result = CreateResult(
+            CreateLine("每日 任 務"),
+            CreateLine("主線 任 務"));
 
-    // Act
-    Action act = () => _sut.FindUnique(
-        result,
-        "任務",
-        OcrTextMatchMode.NormalizedContains);
+        // Act
+        Action act = () => _sut.FindUnique(
+            result,
+            "任務",
+            OcrTextMatchMode.NormalizedContains);
 
-    // Assert
-    act.Should()
-        .Throw<InvalidOperationException>()
-        .WithMessage(
-            "OCR target '任務' is ambiguous: multiple matching lines were found.");
-}
+        // Assert
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(
+                "OCR target '任務' is ambiguous: multiple matching lines were found.");
+    }
+
 
     [Fact]
     public void FindUnique_WhenMatchModeIsUnsupported_ThrowsExpectedException()
@@ -314,6 +315,68 @@ public void FindUnique_WhenNormalizedContainsMatchesMultipleLines_ThrowsExpected
                 "*The specified OCR text match mode is not supported.*matchMode*");
     }
 
+    [Fact]
+    public void FindUniqueMatch_WhenTargetSpansMultipleWords_ShouldReturnUnionOfTargetWordBounds()
+    {
+        // Arrange
+        const string targetText = "任務";
+
+        var line = new OcrTextLine(
+            "掛 收 益 一 ∕ 丶 任 務 一 三 國 巔 峰 戰",
+            Rectangle.FromXYWH(
+                100,
+                900,
+                565,
+                54),
+            [
+                new OcrTextWord(
+                "掛",
+                Rectangle.FromXYWH(100, 910, 40, 32)),
+            new OcrTextWord(
+                "收",
+                Rectangle.FromXYWH(150, 910, 40, 32)),
+            new OcrTextWord(
+                "益",
+                Rectangle.FromXYWH(200, 910, 40, 32)),
+            new OcrTextWord(
+                "任",
+                Rectangle.FromXYWH(530, 910, 40, 32)),
+            new OcrTextWord(
+                "務",
+                Rectangle.FromXYWH(580, 910, 40, 32)),
+            new OcrTextWord(
+                "三",
+                Rectangle.FromXYWH(625, 910, 40, 32))
+            ]);
+
+        var result = new OcrResult(
+            line.Text,
+            [line]);
+
+        var sut = new OcrTextMatcher();
+
+        // Act
+        OcrTextMatch match =
+            sut.FindUniqueMatch(
+                result,
+                targetText,
+                OcrTextMatchMode.NormalizedContains);
+
+        // Assert
+        match.Text.Should().Be(targetText);
+
+        match.Bounds.TopLeft.X.Should().Be(530);
+        match.Bounds.TopLeft.Y.Should().Be(910);
+
+        match.Bounds.BottomRight.X.Should().Be(620);
+        match.Bounds.BottomRight.Y.Should().Be(942);
+
+        match.Bounds.Width.Should().Be(90);
+        match.Bounds.Height.Should().Be(32);
+
+        match.Bounds.Center.X.Should().Be(575);
+        match.Bounds.Center.Y.Should().Be(926);
+    }
 
     private static OcrResult CreateResult(
         params OcrTextLine[] lines)
