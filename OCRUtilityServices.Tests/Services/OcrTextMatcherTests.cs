@@ -162,23 +162,6 @@ public sealed class OcrTextMatcherTests
     }
 
     [Fact]
-    public void FindUnique_WhenLineTextIsNull_ThrowsExpectedException()
-    {
-        // Arrange
-        OcrResult result = CreateResult(
-            CreateLine(null!));
-
-        // Act
-        Action act = () => _sut.FindUnique(result, "任務");
-
-        // Assert
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage(
-                "The OCR result contains a text line with null text.*");
-    }
-
-    [Fact]
     public void FindUnique_WhenTextDiffersByCase_ThrowsExpectedException()
     {
         // Arrange

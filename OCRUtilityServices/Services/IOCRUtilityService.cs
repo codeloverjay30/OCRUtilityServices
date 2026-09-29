@@ -1,3 +1,4 @@
+using CoordinateUtilityServices;
 using OCRUtilityServices.Models;
 
 namespace OCRUtilityServices.Services;
@@ -36,6 +37,32 @@ public interface IOCRUtilityService
     /// </returns>
     Task<OcrResult> RecognizeAsync(
         byte[] imageBuffer,
+        string languageTag,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Recognizes text within a specified region of an encoded image
+    /// by using the specified OCR language.
+    /// </summary>
+    /// <param name="imageBuffer">
+    /// The encoded source image data to recognize.
+    /// </param>
+    /// <param name="region">
+    /// The region to recognize, expressed in source-image pixel coordinates.
+    /// </param>
+    /// <param name="languageTag">
+    /// The BCP-47 language tag used to select the OCR recognizer.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A token used to cancel the recognition operation.
+    /// </param>
+    /// <returns>
+    /// The recognized text with line and word bounds expressed in
+    /// source-image coordinates.
+    /// </returns>
+    Task<OcrResult> RecognizeRegionAsync(
+        byte[] imageBuffer,
+        Rectangle region,
         string languageTag,
         CancellationToken cancellationToken = default);
     

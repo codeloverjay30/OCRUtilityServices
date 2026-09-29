@@ -115,6 +115,46 @@ public sealed class WindowsOcrIntegrationTests
         await act.Should().ThrowAsync<Exception>();
     }
 
+    [Fact]
+    [Trait("Category", "WindowsOcrIntegration")]
+    public async Task RecognizeAsync_ValidPng_ShouldReturnWordLevelBounds()
+    {
+        // Arrange
+        byte[] imageBuffer = ReadFixture();
+
+        // Act
+        OcrResult result = await _service.RecognizeAsync(
+            imageBuffer);
+
+        // Assert
+        OcrTextLine textLine = result.Lines
+            .First(line =>
+                NormalizeWhitespace(line.Text)
+                    .Contains(
+                        "HELLO",
+                        StringComparison.OrdinalIgnoreCase));
+
+        textLine.Words.Should().NotBeEmpty();
+
+        textLine.Words.Should().OnlyContain(
+            word =>
+                !string.IsNullOrWhiteSpace(word.Text)
+                && word.Bounds.Width > 0
+                && word.Bounds.Height > 0);
+
+        textLine.Words.Should().OnlyContain(
+            word =>
+                word.Bounds.TopLeft.X >= textLine.Bounds.TopLeft.X
+                && word.Bounds.TopLeft.Y >= textLine.Bounds.TopLeft.Y
+                && word.Bounds.BottomRight.X <= textLine.Bounds.BottomRight.X
+                && word.Bounds.BottomRight.Y <= textLine.Bounds.BottomRight.Y);
+
+        textLine.Words.Should().Contain(
+            word =>
+                word.Bounds.Width < textLine.Bounds.Width);
+    }
+
+
     private byte[] ReadFixture()
     {
         string path = _fileSystem.Path.Combine(
