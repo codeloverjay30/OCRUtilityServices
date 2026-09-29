@@ -47,4 +47,29 @@ public interface IOcrTextMatcher
         OcrResult result,
         string targetText,
         OcrTextMatchMode matchMode);
+
+    /// <summary>
+    /// Finds exactly one target-specific OCR text match and returns its
+    /// source-image bounds.
+    /// </summary>
+    /// <param name="result">The OCR result to search.</param>
+    /// <param name="targetText">The target text to locate.</param>
+    /// <param name="matchMode">The matching strategy to apply.</param>
+    /// <returns>
+    /// The uniquely matched target text and its source-image bounds.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="result"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="targetText"/> is null, empty, or whitespace.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the target cannot be uniquely located.
+    /// </exception>
+    OcrTextMatch FindUniqueMatch(
+        OcrResult result,
+        string targetText,
+        OcrTextMatchMode matchMode);
+    
 }

@@ -1,3 +1,5 @@
+using System.Text;
+using CoordinateUtilityServices;
 using OCRUtilityServices.Models;
 
 namespace OCRUtilityServices.Services;
@@ -109,6 +111,246 @@ public sealed class OcrTextMatcher : IOcrTextMatcher
         return matchedLine
             ?? throw new InvalidOperationException(
                 $"OCR target '{targetText}' was not found.");
+    }
+
+    /// <inheritdoc/>
+    public OcrTextMatch FindUniqueMatch(
+        OcrResult result,
+        string targetText,
+        OcrTextMatchMode matchMode)
+    {
+        OcrTextLine matchedLine =
+            FindUnique(
+                result,
+                targetText,
+                matchMode);
+
+        if (matchedLine.Words.Count == 0)
+        {
+            throw new InvalidOperationException(
+                $"OCR target '{targetText}' was found, but its word-level geometry is unavailable.");
+        }
+
+        string normalizedTarget = NormalizeWithoutWhitespace(targetText);
+
+        if (normalizedTarget.Length == 0)
+        {
+            throw new ArgumentException(
+                "OCR target text must contain at least one non-whitespace character.",
+                nameof(targetText));
+        }
+
+        OcrTextMatch? matchedTarget = null;
+
+        for (int startIndex = 0;
+             startIndex < matchedLine.Words.Count;
+             startIndex++)
+        {
+            StringBuilder candidateBuilder = new();
+
+            for (int endIndex = startIndex;
+                 endIndex < matchedLine.Words.Count;
+                 endIndex++)
+            {
+                OcrTextWord word =
+                    matchedLine.Words[endIndex]
+                    ?? throw new ArgumentException(
+                        "The matched OCR line contains a null word.",
+                        nameof(result));
+
+                string normalizedWord =
+                    NormalizeWithoutWhitespace(word.Text);
+
+                if (normalizedWord.Length == 0)
+                {
+                    continue;
+                }
+
+                candidateBuilder.Append(normalizedWord);
+
+                string candidate = candidateBuilder.ToString();
+
+                if (candidate.Length > normalizedTarget.Length)
+                {
+                    break;
+                }
+
+                if (!normalizedTarget.StartsWith(
+                        candidate,
+                        StringComparison.Ordinal))
+                {
+                    break;
+                }
+
+                if (!candidate.Equals(
+                        normalizedTarget,
+                        StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                Rectangle bounds =
+                    CreateUnionBounds(
+                        matchedLine.Words,
+                        startIndex,
+                        endIndex,
+                        result);
+
+                OcrTextMatch currentMatch =
+                    new(
+                        targetText.Trim(),
+                        bounds);
+
+                if (matchedTarget is not null)
+                {
+                    throw new InvalidOperationException(
+                        $"OCR target '{targetText}' is ambiguous: " +
+                        "multiple word-level matches were found.");
+                }
+
+                matchedTarget = currentMatch;
+
+                break;
+            }
+        }
+
+        return matchedTarget
+            ?? throw new InvalidOperationException(
+                $"OCR target '{targetText}' was found in a text line, " +
+                "but its word-level geometry could not be resolved.");
+    }
+
+
+    /// <summary>
+    /// Creates the union bounds for a contiguous range of OCR words.
+    /// </summary>
+    /// <param name="words">The OCR words containing the matched range.</param>
+    /// <param name="startIndex">The inclusive start index of the range.</param>
+    /// <param name="endIndex">The inclusive end index of the range.</param>
+    /// <param name="result">
+    /// The OCR result used for argument-error attribution.
+    /// </param>
+    /// <returns>
+    /// The smallest rectangle containing all OCR words in the specified range.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the word range contains invalid word data.
+    /// </exception>
+    private static Rectangle CreateUnionBounds(
+        IReadOnlyList<OcrTextWord> words,
+        int startIndex,
+        int endIndex,
+        OcrResult result)
+    {
+        OcrTextWord firstWord =
+            words[startIndex]
+            ?? throw new ArgumentException(
+                "The matched OCR line contains a null word.",
+                nameof(result));
+
+        double left =
+            firstWord.Bounds.TopLeft.X;
+
+        double top =
+            firstWord.Bounds.TopLeft.Y;
+
+        double right =
+            firstWord.Bounds.BottomRight.X;
+
+        double bottom =
+            firstWord.Bounds.BottomRight.Y;
+
+        for (int index = startIndex + 1;
+             index <= endIndex;
+             index++)
+        {
+            OcrTextWord word =
+                words[index]
+                ?? throw new ArgumentException(
+                    "The matched OCR line contains a null word.",
+                    nameof(result));
+
+            Rectangle bounds =
+                word.Bounds;
+
+            left =
+                Math.Min(
+                    left,
+                    bounds.TopLeft.X);
+
+            top =
+                Math.Min(
+                    top,
+                    bounds.TopLeft.Y);
+
+            right =
+                Math.Max(
+                    right,
+                    bounds.BottomRight.X);
+
+            bottom =
+                Math.Max(
+                    bottom,
+                    bounds.BottomRight.Y);
+        }
+
+        return Rectangle.FromXYWH(
+            left,
+            top,
+            right - left,
+            bottom - top);
+    }
+
+
+    /// <summary>
+    /// Removes whitespace from OCR text while preserving all other characters
+    /// and their ordinal ordering.
+    /// </summary>
+    /// <param name="value">The text to normalize.</param>
+    /// <returns>The text with whitespace removed.</returns>
+    private static string NormalizeWithoutWhitespace(
+        string value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        ReadOnlySpan<char> source = value.AsSpan();
+
+        int nonWhitespaceCount = 0;
+
+        foreach (char character in source)
+        {
+            if (!char.IsWhiteSpace(character))
+            {
+                nonWhitespaceCount++;
+            }
+        }
+
+        if (nonWhitespaceCount == source.Length)
+        {
+            return value;
+        }
+
+        return string.Create(
+            nonWhitespaceCount,
+            value,
+            static (destination, state) =>
+            {
+                ReadOnlySpan<char> sourceSpan =
+                    state.AsSpan();
+
+                int destinationIndex = 0;
+
+                foreach (char character in sourceSpan)
+                {
+                    if (char.IsWhiteSpace(character))
+                    {
+                        continue;
+                    }
+
+                    destination[destinationIndex++] =
+                        character;
+                }
+            });
     }
 
     /// <summary>
