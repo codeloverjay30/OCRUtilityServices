@@ -679,105 +679,208 @@ public sealed class OCRUtilityServiceIntegrationTests
     }
 
     /// <summary>
-/// Compares the known OCR-readable task fixture with the task region decoded
-/// from the OmniAppium runtime screenshot.
-/// </summary>
-[Fact]
-public async Task CompareTaskFixtureAndRuntimeRegion_ShouldReportImageCharacteristics()
-{
-    // Arrange
-    string fixturePath = _fileSystem.Path.Combine(
-        AppContext.BaseDirectory,
-        "TestData",
-        "game-main-screen-task-roi.png");
+    /// Compares the known OCR-readable task fixture with the task region decoded
+    /// from the OmniAppium runtime screenshot.
+    /// </summary>
+    [Fact]
+    public async Task CompareTaskFixtureAndRuntimeRegion_ShouldReportImageCharacteristics()
+    {
+        // Arrange
+        string fixturePath = _fileSystem.Path.Combine(
+            AppContext.BaseDirectory,
+            "TestData",
+            "game-main-screen-task-roi.png");
 
-    string runtimePath = _fileSystem.Path.Combine(
-        AppContext.BaseDirectory,
-        "TestData",
-        "omniappium-runtime-ocr-diagnostic.png");
+        string runtimePath = _fileSystem.Path.Combine(
+            AppContext.BaseDirectory,
+            "TestData",
+            "omniappium-runtime-ocr-diagnostic.png");
 
-    _fileSystem.File.Exists(fixturePath)
-        .Should()
-        .BeTrue(
-            $"the known OCR-readable task fixture must exist at '{fixturePath}'");
+        _fileSystem.File.Exists(fixturePath)
+            .Should()
+            .BeTrue(
+                $"the known OCR-readable task fixture must exist at '{fixturePath}'");
 
-    _fileSystem.File.Exists(runtimePath)
-        .Should()
-        .BeTrue(
-            $"the runtime screenshot must exist at '{runtimePath}'");
+        _fileSystem.File.Exists(runtimePath)
+            .Should()
+            .BeTrue(
+                $"the runtime screenshot must exist at '{runtimePath}'");
 
-    byte[] fixtureBuffer =
-        await _fileSystem.File.ReadAllBytesAsync(fixturePath);
+        byte[] fixtureBuffer =
+            await _fileSystem.File.ReadAllBytesAsync(fixturePath);
 
-    byte[] runtimeBuffer =
-        await _fileSystem.File.ReadAllBytesAsync(runtimePath);
+        byte[] runtimeBuffer =
+            await _fileSystem.File.ReadAllBytesAsync(runtimePath);
 
-    fixtureBuffer.Should().NotBeEmpty();
-    runtimeBuffer.Should().NotBeEmpty();
+        fixtureBuffer.Should().NotBeEmpty();
+        runtimeBuffer.Should().NotBeEmpty();
 
-    // Act
-    ImageDiagnostic fixture =
-        await DecodeImageDiagnosticAsync(fixtureBuffer);
+        // Act
+        ImageDiagnostic fixture =
+            await DecodeImageDiagnosticAsync(fixtureBuffer);
 
-    byte[] runtimeRegionBuffer =
-        await DecodeAndScaleRegionAsync(
-            runtimeBuffer,
-            regionX: 500,
-            regionY: 840,
-            regionWidth: 130,
-            regionHeight: 100,
-            scaleFactor: 1.0);
+        byte[] runtimeRegionBuffer =
+            await DecodeAndScaleRegionAsync(
+                runtimeBuffer,
+                regionX: 500,
+                regionY: 840,
+                regionWidth: 130,
+                regionHeight: 100,
+                scaleFactor: 1.0);
 
-    ImageDiagnostic runtimeRegion =
-        await DecodeImageDiagnosticAsync(runtimeRegionBuffer);
+        ImageDiagnostic runtimeRegion =
+            await DecodeImageDiagnosticAsync(runtimeRegionBuffer);
 
-    var sut = new OCRUtilityService();
+        var sut = new OCRUtilityService();
 
-    OcrResult fixtureOcr =
-        await sut.RecognizeAsync(
-            fixtureBuffer,
-            "zh-TW");
+        OcrResult fixtureOcr =
+            await sut.RecognizeAsync(
+                fixtureBuffer,
+                "zh-TW");
 
-    OcrResult runtimeOcr =
-        await sut.RecognizeAsync(
-            runtimeRegionBuffer,
-            "zh-TW");
+        OcrResult runtimeOcr =
+            await sut.RecognizeAsync(
+                runtimeRegionBuffer,
+                "zh-TW");
 
-    // Assert
-    fixture.Width.Should().BeGreaterThan(0);
-    fixture.Height.Should().BeGreaterThan(0);
+        // Assert
+        fixture.Width.Should().BeGreaterThan(0);
+        fixture.Height.Should().BeGreaterThan(0);
 
-    runtimeRegion.Width.Should().Be(130);
-    runtimeRegion.Height.Should().Be(100);
+        runtimeRegion.Width.Should().Be(130);
+        runtimeRegion.Height.Should().Be(100);
 
-    _output.WriteLine(
-        $"Fixture: {fixture.Width}x{fixture.Height}, " +
-        $"PixelFormat={fixture.PixelFormat}, " +
-        $"AlphaMode={fixture.AlphaMode}, " +
-        $"Bytes={fixture.EncodedLength}");
+        _output.WriteLine(
+            $"Fixture: {fixture.Width}x{fixture.Height}, " +
+            $"PixelFormat={fixture.PixelFormat}, " +
+            $"AlphaMode={fixture.AlphaMode}, " +
+            $"Bytes={fixture.EncodedLength}");
 
-    _output.WriteLine(
-        $"Runtime ROI: {runtimeRegion.Width}x{runtimeRegion.Height}, " +
-        $"PixelFormat={runtimeRegion.PixelFormat}, " +
-        $"AlphaMode={runtimeRegion.AlphaMode}, " +
-        $"Bytes={runtimeRegion.EncodedLength}");
+        _output.WriteLine(
+            $"Runtime ROI: {runtimeRegion.Width}x{runtimeRegion.Height}, " +
+            $"PixelFormat={runtimeRegion.PixelFormat}, " +
+            $"AlphaMode={runtimeRegion.AlphaMode}, " +
+            $"Bytes={runtimeRegion.EncodedLength}");
 
-    _output.WriteLine(
-        $"Fixture OCR: [{fixtureOcr.Text}], Lines={fixtureOcr.Lines.Count}");
+        _output.WriteLine(
+            $"Fixture OCR: [{fixtureOcr.Text}], Lines={fixtureOcr.Lines.Count}");
 
-    _output.WriteLine(
-        $"Runtime ROI OCR: [{runtimeOcr.Text}], Lines={runtimeOcr.Lines.Count}");
-}
+        _output.WriteLine(
+            $"Runtime ROI OCR: [{runtimeOcr.Text}], Lines={runtimeOcr.Lines.Count}");
+    }
 
-/// <summary>
-/// Describes image characteristics relevant to OCR diagnostics.
-/// </summary>
-private sealed record ImageDiagnostic(
-    uint Width,
-    uint Height,
-    BitmapPixelFormat PixelFormat,
-    BitmapAlphaMode AlphaMode,
-    int EncodedLength);
+    /// <summary>
+    /// Verifies that recognition options route runtime screenshot recognition
+    /// through the configured region while preserving source-image coordinates.
+    /// </summary>
+    [Fact]
+    public async Task RecognizeAsync_OmniAppiumRuntimeScreenshot_WithRecognitionOptions_ShouldRecognizeTaskWithSourceCoordinates()
+    {
+        // Arrange
+        string imagePath = _fileSystem.Path.Combine(
+            AppContext.BaseDirectory,
+            "TestData",
+            "omniappium-runtime-ocr-diagnostic.png");
+
+        _fileSystem.File
+            .Exists(imagePath)
+            .Should()
+            .BeTrue(
+                $"the runtime OCR diagnostic image must exist at '{imagePath}'");
+
+        byte[] imageBuffer =
+            await _fileSystem.File.ReadAllBytesAsync(imagePath);
+
+        imageBuffer
+            .Should()
+            .NotBeEmpty(
+                "the runtime OCR diagnostic image must contain image data");
+
+        Rectangle searchRegion =
+            Rectangle.FromXYWH(
+                x: 500,
+                y: 840,
+                width: 130,
+                height: 120);
+
+        var options = new OcrRecognitionOptions
+        {
+            LanguageTag = "zh-TW",
+            Region = searchRegion
+        };
+
+        var sut = new OCRUtilityService();
+
+        // Act
+        OcrResult result =
+            await sut.RecognizeAsync(
+                imageBuffer,
+                options);
+
+        // Assert
+        OcrTextLine[] taskLines =
+            result.Lines
+                .Where(
+                    line =>
+                        RemoveWhiteSpace(line.Text)
+                            .Contains(
+                                "任務",
+                                StringComparison.Ordinal))
+                .ToArray();
+
+        taskLines
+            .Should()
+            .ContainSingle(
+                "the configured recognition region must contain exactly one task target");
+
+        OcrTextLine taskLine = taskLines.Single();
+
+        taskLine.Bounds.TopLeft.X
+            .Should()
+            .BeGreaterThanOrEqualTo(
+                searchRegion.TopLeft.X);
+
+        taskLine.Bounds.TopLeft.Y
+            .Should()
+            .BeGreaterThanOrEqualTo(
+                searchRegion.TopLeft.Y);
+
+        taskLine.Bounds.BottomRight.X
+            .Should()
+            .BeLessThanOrEqualTo(
+                searchRegion.BottomRight.X);
+
+        taskLine.Bounds.BottomRight.Y
+            .Should()
+            .BeLessThanOrEqualTo(
+                searchRegion.BottomRight.Y);
+
+        taskLine.Words
+            .Should()
+            .NotBeEmpty(
+                "the recognized task must preserve word-level source geometry");
+
+        taskLine.Words
+            .Should()
+            .OnlyContain(
+                word =>
+                    word.Bounds.TopLeft.X >= searchRegion.TopLeft.X
+                    && word.Bounds.TopLeft.Y >= searchRegion.TopLeft.Y
+                    && word.Bounds.BottomRight.X <= searchRegion.BottomRight.X
+                    && word.Bounds.BottomRight.Y <= searchRegion.BottomRight.Y,
+                "word bounds returned through the options overload must remain in source-image coordinates");
+    }
+
+
+    /// <summary>
+    /// Describes image characteristics relevant to OCR diagnostics.
+    /// </summary>
+    private sealed record ImageDiagnostic(
+        uint Width,
+        uint Height,
+        BitmapPixelFormat PixelFormat,
+        BitmapAlphaMode AlphaMode,
+        int EncodedLength);
 
     /// <summary>
     /// Decodes image metadata required for OCR fixture diagnostics.

@@ -1,5 +1,7 @@
 
+using CoordinateUtilityServices;
 using FluentAssertions;
+using OCRUtilityServices.Models;
 using OCRUtilityServices.Services;
 using Xunit;
 
@@ -115,5 +117,35 @@ public sealed class OCRUtilityServiceTests
             .ThrowAsync<PlatformNotSupportedException>()
             .WithMessage(
                 "*This OCR implementation requires the Windows target framework.*");
+    }
+
+    [Fact]
+    public async Task RecognizeAsync_RegionWithoutLanguageTag_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sut = new OCRUtilityService();
+
+        byte[] imageBuffer = [0x01];
+
+        var options = new OcrRecognitionOptions
+        {
+            Region = Rectangle.FromXYWH(
+                500,
+                840,
+                130,
+                120)
+        };
+
+        // Act
+        Func<Task> act = () =>
+            sut.RecognizeAsync(
+                imageBuffer,
+                options);
+
+        // Assert
+        await act.Should()
+            .ThrowAsync<ArgumentException>()
+            .WithMessage(
+                "*language tag is required*");
     }
 }
