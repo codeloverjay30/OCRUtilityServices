@@ -39,6 +39,63 @@ public sealed class OCRUtilityService : IOCRUtilityService
             cancellationToken)
             .ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="imageBuffer"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="imageBuffer"/> is empty or when <paramref name="options"/> specifies a region but does not specify a language tag.
+    /// </exception>
+    /// <exception cref="PlatformNotSupportedException">
+    /// Thrown when the current platform does not support the Windows OCR engine.
+    /// </exception>
+    public Task<OcrResult> RecognizeAsync(
+        byte[] imageBuffer,
+        OcrRecognitionOptions options,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(imageBuffer);
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (imageBuffer.Length == 0)
+        {
+            throw new ArgumentException(
+                "The image buffer must not be empty.",
+                nameof(imageBuffer));
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (options.Region is { } region)
+        {
+            if (string.IsNullOrWhiteSpace(options.LanguageTag))
+            {
+                throw new ArgumentException(
+                    "A language tag is required when recognizing a specific image region.",
+                    nameof(options));
+            }
+
+            return RecognizeRegionAsync(
+                imageBuffer,
+                region,
+                options.LanguageTag,
+                cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.LanguageTag))
+        {
+            return RecognizeAsync(
+                imageBuffer,
+                options.LanguageTag,
+                cancellationToken);
+        }
+
+        return RecognizeAsync(
+            imageBuffer,
+            cancellationToken);
+    }
+
     /// <inheritdoc/>
     public async Task<OcrResult> RecognizeAsync(
         byte[] imageBuffer,

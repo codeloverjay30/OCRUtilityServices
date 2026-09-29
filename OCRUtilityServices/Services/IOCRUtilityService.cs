@@ -41,6 +41,26 @@ public interface IOCRUtilityService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Recognizes text from an encoded image using the specified recognition options.
+    /// </summary>
+    /// <param name="imageBuffer">
+    /// The encoded image data to recognize.
+    /// </param>
+    /// <param name="options">
+    /// The options controlling OCR recognition.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A token used to cancel the recognition operation.
+    /// </param>
+    /// <returns>
+    /// The recognized OCR result.
+    /// </returns>
+    Task<OcrResult> RecognizeAsync(
+        byte[] imageBuffer,
+        OcrRecognitionOptions options,
+        CancellationToken cancellationToken = default);
+    
+    /// <summary>
     /// Recognizes text within a specified region of an encoded image
     /// by using the specified OCR language.
     /// </summary>
