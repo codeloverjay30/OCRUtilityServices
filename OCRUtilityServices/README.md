@@ -29,3 +29,7 @@ Utility packages to perform OCR and analyze its results
 ## 2.4.0
 ### Fixed
 + Get the bounding rectangle of target text instead the whole line which contains target text. See issue `#1`.
+
+## 2.5.0
+### Fixed
++ Implement reviewed ground-truth geometry validation for safe OCR click authorization. See issue `#1`.
