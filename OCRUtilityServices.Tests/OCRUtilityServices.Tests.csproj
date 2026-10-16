@@ -18,6 +18,12 @@
     <ProjectReference Include="..\OCRUtilityServices\OCRUtilityServices.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
 </Project>
