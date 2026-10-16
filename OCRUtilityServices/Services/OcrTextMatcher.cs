@@ -127,8 +127,19 @@ public sealed class OcrTextMatcher : IOcrTextMatcher
 
         if (matchedLine.Words.Count == 0)
         {
-            throw new InvalidOperationException(
-                $"OCR target '{targetText}' was found, but its word-level geometry is unavailable.");
+            // A line-level detector may safely provide bounds only when the
+            // entire normalized line equals the requested target.
+            string normalizedLine = NormalizeWithoutWhitespace(matchedLine.Text);
+            string normalizedRequested = NormalizeWithoutWhitespace(targetText);
+
+            if (!normalizedLine.Equals(normalizedRequested, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    $"OCR target '{targetText}' was found, but its word-level geometry is unavailable.");
+            }
+
+            ValidateFallbackBounds(matchedLine.Bounds, targetText);
+            return new OcrTextMatch(targetText.Trim(), matchedLine.Bounds);
         }
 
         string normalizedTarget = NormalizeWithoutWhitespace(targetText);
@@ -220,6 +231,31 @@ public sealed class OcrTextMatcher : IOcrTextMatcher
                 "but its word-level geometry could not be resolved.");
     }
 
+
+    /// <summary>
+    /// Rejects non-finite, empty, or non-positive line geometry before an exact-line fallback.
+    /// </summary>
+    /// <param name="bounds">The candidate line bounds in source-image coordinates.</param>
+    /// <param name="targetText">The requested OCR target.</param>
+    private static void ValidateFallbackBounds(Rectangle bounds, string targetText)
+    {
+        if (!double.IsFinite(bounds.TopLeft.X) ||
+            !double.IsFinite(bounds.TopLeft.Y) ||
+            !double.IsFinite(bounds.BottomRight.X) ||
+            !double.IsFinite(bounds.BottomRight.Y) ||
+            !double.IsFinite(bounds.Width) ||
+            !double.IsFinite(bounds.Height) ||
+            bounds.TopLeft.X < 0 ||
+            bounds.TopLeft.Y < 0 ||
+            bounds.Width <= 0 ||
+            bounds.Height <= 0 ||
+            bounds.BottomRight.X <= bounds.TopLeft.X ||
+            bounds.BottomRight.Y <= bounds.TopLeft.Y)
+        {
+            throw new InvalidOperationException(
+                $"OCR target '{targetText}' has invalid line-level geometry.");
+        }
+    }
 
     /// <summary>
     /// Creates the union bounds for a contiguous range of OCR words.
