@@ -1,0 +1,62 @@
+[
+  {
+    "Fixture": "ocr-diagnostic-000003.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000003.json",
+    "AnnotationSha256": "CB9EFD6CF211E39A6B9FDE6E6DD109B8BF20A0C160EA49E0CB14E465F203123C",
+    "ScreenshotSha256": "3BDF742BDFE5DFD23AEA5F7E5663EC43D30C3986303B2511841BC9225ED984CE"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000004.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000004.json",
+    "AnnotationSha256": "D7A5921C6F092B1364FB36330FA8D25F7EA356C3D6DC350AAFFB2B561D0FE875",
+    "ScreenshotSha256": "941DDC4E5539E13E45FA9E52844CA74794B8AE1D8D34464E71A4516071BCFA4A"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000005.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000005.json",
+    "AnnotationSha256": "8166A174B698E725C0059D2D8750F29E92D82FFD627696A9B0DD457A34A98EE9",
+    "ScreenshotSha256": "B67D39FE7619200188A3B8964FF277D30F3DBF11723EAE5B1F33BF4F633102A9"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000006.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000006.json",
+    "AnnotationSha256": "36139EB9157484751570ED50921EAE7ED4FF38EAD7225619258FBD3D02A98D23",
+    "ScreenshotSha256": "D512493DC0B534566F8F8B561DC794A259B65A1703E7D2B9938B674207C25FC2"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000007.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000007.json",
+    "AnnotationSha256": "067CB87DAF6B16B087599EBF13D95F2359886553ADB42E6A80343A3189BAB969",
+    "ScreenshotSha256": "01D66F8266FBCF8B2DED8FFB252DA253DC742E0E79C9995F370EF2C6D14419DA"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000008.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000008.json",
+    "AnnotationSha256": "D5916620A7CD77C99E37B1CA5C5296238B3A833A2BC75B0E0F05B5A8FF02ABA8",
+    "ScreenshotSha256": "6359B2BEB53BAE76FAAFF173C5E3DC1D4ACB041A6D061583C16A3A6DCDF2DC16"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000009.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000009.json",
+    "AnnotationSha256": "4739A3326300AA3FF2EFD96097775A2E9278C6BA9F3A27B01C64A20F491F15BA",
+    "ScreenshotSha256": "D512493DC0B534566F8F8B561DC794A259B65A1703E7D2B9938B674207C25FC2"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000010.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000010.json",
+    "AnnotationSha256": "C7636B97C150604FD094485980841B813D1C70F9305BF8A8E1342ED0DDBB3529",
+    "ScreenshotSha256": "2D303FEF65B3934A2D25DB1D6407247F98528F27BA69A26BEF1EA92BAB37C9AB"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000011.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000011.json",
+    "AnnotationSha256": "800E8A0CD47F6500B490573E371372E27A250FE90C897B072F6C6D303DE9C31D",
+    "ScreenshotSha256": "3C83E6FCD8C51759F7535B9ED2B20809FAAAAA40398972A4EF5C7659E8D77AF1"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000012.png",
+    "AnnotationPath": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\PaddleOcr\\ApprovedGroundTruth\\ocr-diagnostic-000012.json",
+    "AnnotationSha256": "646EAE42B2BDCE0BE0DA76E129F4706886DBD847A8D25EF7471116974D6A3699",
+    "ScreenshotSha256": "69038E8E4744E4E7196745A478BBE860DC1E7B03CA79CB6B836E74ECE05E8C1E"
+  }
+]

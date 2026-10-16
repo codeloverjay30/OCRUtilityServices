@@ -1,0 +1,62 @@
+[
+  {
+    "Fixture": "ocr-diagnostic-000003.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000003",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000004.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000004",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000005.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000005",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000006.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000006",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000007.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000007",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000008.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000008",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000009.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000009",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000010.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000010",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000011.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000011",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  },
+  {
+    "Fixture": "ocr-diagnostic-000012.png",
+    "AnnotationPath": "REPLACE_WITH_REVIEWED_ANNOTATION_PATH_FOR_000012",
+    "AnnotationSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256",
+    "ScreenshotSha256": "REPLACE_WITH_APPROVED_64_CHARACTER_SHA256"
+  }
+]

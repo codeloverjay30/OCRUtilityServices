@@ -1,0 +1,20 @@
+{
+  "Fixture": "ocr-diagnostic-000012.png",
+  "TargetText": "登入遊戲",
+  "Status": "PendingReview",
+  "Reviewer": "",
+  "ImageWidth": 2340,
+  "ImageHeight": 1080,
+  "TextBounds": {
+    "X": 1095,
+    "Y": 735,
+    "Width": 150,
+    "Height": 40
+  },
+  "ButtonBounds": {
+    "X": 1020,
+    "Y": 716,
+    "Width": 300,
+    "Height": 80
+  }
+}
