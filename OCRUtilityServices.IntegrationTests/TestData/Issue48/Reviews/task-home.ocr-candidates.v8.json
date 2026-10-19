@@ -1,0 +1,29 @@
+{
+  "SchemaVersion": "1.0",
+  "Source": "PaddleOCR-V3-Detection-V6-Recognition",
+  "Fixture": "task-home-original.png",
+  "ScreenshotSha256": "1b5739e711ff97e211326cb3d6009e2e1a19421d8bea529a922e0b993ea0e34d",
+  "ExpectedText": "\u4EFB\u52D9",
+  "Status": "PendingReview",
+  "ConfidenceAvailable": true,
+  "Candidates": [
+    {
+      "Index": 0,
+      "RawText": "\u4EFB\u52D9",
+      "Confidence": 0.9998355,
+      "DetectionBounds": {
+        "X": 556,
+        "Y": 917,
+        "Width": 51,
+        "Height": 18
+      },
+      "RecognitionCropBounds": {
+        "X": 548,
+        "Y": 909,
+        "Width": 67,
+        "Height": 34
+      },
+      "CropPadding": 8
+    }
+  ]
+}

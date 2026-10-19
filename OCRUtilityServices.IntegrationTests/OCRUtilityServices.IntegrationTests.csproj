@@ -18,10 +18,16 @@
     <ProjectReference Include="..\OCRUtilityServices\OCRUtilityServices.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OCRUtilityServices.AnnotationTool\OCRUtilityServices.AnnotationTool.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Moq" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\TestData\ocr-hello.png" Link="TestData\ocr-hello.png" CopyToOutputDirectory="PreserveNewest" />
@@ -29,5 +35,8 @@
     <None Include="..\TestData\game-main-screen-task-roi.png" Link="TestData\game-main-screen-task-roi.png" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\TestData\game-main-screen-task-roi-3x.png" Link="TestData\game-main-screen-task-roi-3x.png" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\TestData\omniappium-runtime-ocr-diagnostic.png" Link="TestData\omniappium-runtime-ocr-diagnostic.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="TestData\Issue48\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
   </ItemGroup>
 </Project>
