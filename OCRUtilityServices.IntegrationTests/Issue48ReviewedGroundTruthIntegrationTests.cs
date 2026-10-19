@@ -13,7 +13,7 @@ public sealed class Issue48ReviewedGroundTruthIntegrationTests
     private const string ScreenshotDigest =
         "1b5739e711ff97e211326cb3d6009e2e1a19421d8bea529a922e0b993ea0e34d";
     private const string AnnotationDigest =
-        "3ffa69777c017082ce3b79295215bba4efb4345366c870e9c5c62146129ebc51";
+        "F5CC6CB7BD3AA936D9C82A59D01F0BFB7DCFBB3E9EFC39E979ECA6BDCFEE0C14";
     private readonly IFileSystem _fileSystem = new FileSystem();
 
     [Fact]

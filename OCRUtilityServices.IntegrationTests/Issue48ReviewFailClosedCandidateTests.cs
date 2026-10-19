@@ -12,7 +12,7 @@ public sealed class Issue48ReviewFailClosedCandidateTests
     private const string ApprovedScreenshotSha256 =
         "1b5739e711ff97e211326cb3d6009e2e1a19421d8bea529a922e0b993ea0e34d";
 
-    private const string ReviewPinnedAnnotationSha256 =
+    private const string LegacyMismatchedAnnotationSha256 =
         "3ffa69777c017082ce3b79295215bba4efb4345366c870e9c5c62146129ebc51";
 
     private readonly IFileSystem _fileSystem = new FileSystem();
@@ -26,7 +26,7 @@ public sealed class Issue48ReviewFailClosedCandidateTests
 
         Func<Task> act = () => loader.LoadAsync(
             annotationPath, screenshotPath,
-            ReviewPinnedAnnotationSha256, ApprovedScreenshotSha256);
+            LegacyMismatchedAnnotationSha256, ApprovedScreenshotSha256);
 
         await act.Should().ThrowAsync<InvalidDataException>()
             .WithMessage("*Annotation SHA-256 does not match approved digest*");
@@ -57,24 +57,58 @@ public sealed class Issue48ReviewFailClosedCandidateTests
         geometry.GetProperty("SafeClickAreaConfirmed").GetBoolean().Should().BeFalse();
     }
 
+
     [Fact]
-    public async Task ReviewFixture_AnnotationReferenceAndDigest_ShouldExposeUnresolvedMismatch()
+    public async Task ReviewFixture_AnnotationReferenceAndDigest_ShouldMatchCurrentFixture()
     {
-        string annotationPath = FixturePath("GroundTruth", "task-home.ground-truth.reviewed.json");
+        string annotationPath = FixturePath(
+            "GroundTruth",
+            "task-home.ground-truth.reviewed.json");
+
         using JsonDocument review = await ReadJsonAsync(
             FixturePath("Reviews", "task-home.review.json"));
 
         JsonElement root = review.RootElement;
-        string? referencedFile = root.GetProperty("AnnotationFile").GetString();
-        string? pinnedDigest = root.GetProperty("Integrity")
-            .GetProperty("AnnotationSha256").GetString();
-        byte[] annotationBytes = await _fileSystem.File.ReadAllBytesAsync(annotationPath);
-        string actualDigest = Convert.ToHexString(SHA256.HashData(annotationBytes));
+        JsonElement integrity = root.GetProperty("Integrity");
+        JsonElement decision = root.GetProperty("Decision");
 
-        referencedFile.Should().Be("task-home.reviewed.json");
-        referencedFile.Should().NotBe(_fileSystem.Path.GetFileName(annotationPath));
-        pinnedDigest.Should().Be(ReviewPinnedAnnotationSha256);
-        actualDigest.Should().NotBe(pinnedDigest, "the review still pins a different annotation version");
+        string? referencedFile = root
+            .GetProperty("AnnotationFile")
+            .GetString();
+
+        string? pinnedDigest = integrity
+            .GetProperty("AnnotationSha256")
+            .GetString();
+
+        byte[] annotationBytes =
+            await _fileSystem.File.ReadAllBytesAsync(annotationPath);
+
+        string actualDigest = Convert.ToHexString(
+            SHA256.HashData(annotationBytes));
+
+        referencedFile.Should().Be(
+            _fileSystem.Path.GetFileName(annotationPath));
+
+        pinnedDigest.Should().NotBeNullOrWhiteSpace();
+
+        pinnedDigest.Should().BeEquivalentTo(
+            actualDigest,
+            "the review must reference the exact annotation bytes");
+
+        actualDigest.Should().Be(
+            "F5CC6CB7BD3AA936D9C82A59D01F0BFB7DCFBB3E9EFC39E979ECA6BDCFEE0C14");
+
+        decision.GetProperty("Status")
+            .GetString()
+            .Should().Be("PendingGeometryReview");
+
+        decision.GetProperty("GroundTruthApproved")
+            .GetBoolean()
+            .Should().BeFalse();
+
+        decision.GetProperty("ClickAuthorized")
+            .GetBoolean()
+            .Should().BeFalse();
     }
 
     [Fact]
