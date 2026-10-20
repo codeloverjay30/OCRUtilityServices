@@ -33,3 +33,7 @@ Utility packages to perform OCR and analyze its results
 ## 2.5.0
 ### Fixed
 + Implement reviewed ground-truth geometry validation for safe OCR click authorization. See issue `#1`.
+
+## 2.6.0
+### Fixed
++ phrase 3 of test(ocr): Verify Runtime Grounded Click Authorization and Fail-Closed Boundaries. See [OmniAppium issue `#48`](https://github.com/codeloverjay30/OmniAppium/issues/48) (just complete phrase 1 to phrase 3).
