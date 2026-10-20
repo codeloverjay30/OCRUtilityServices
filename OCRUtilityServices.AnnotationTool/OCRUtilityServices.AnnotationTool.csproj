@@ -10,5 +10,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <Version>1.0.0</Version>
+    <PackageTags>$(PackageTags);OCR;Annotation with Paddle OCR</PackageTags>
   </PropertyGroup>
 </Project>
