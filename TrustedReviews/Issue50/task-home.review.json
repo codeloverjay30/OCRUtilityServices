@@ -1,0 +1,48 @@
+
+{
+  "SchemaVersion": "1.0",
+  "ReviewId": null,
+  "Issue": 48,
+  "Fixture": "task-home-original.png",
+  "AnnotationFile": "task-home.ground-truth.reviewed.json",
+  "Target": {
+    "ExpectedText": "任務",
+    "ObservedOcrText": "任 務",
+    "NormalizedOcrText": "任務",
+    "Description": "Bottom-left task button",
+    "VisualIdentityConfirmed": true
+  },
+  "ImageWidth": 2340,
+  "ImageHeight": 1080,
+  "Integrity": {
+    "ScreenshotSha256": "1B5739E711FF97E211326CB3D6009E2E1A19421D8BEA529A922E0B993EA0E34D",
+    "AnnotationSha256": "F5CC6CB7BD3AA936D9C82A59D01F0BFB7DCFBB3E9EFC39E979ECA6BDCFEE0C14",
+    "ScreenshotDimensionsVerified": true,
+    "AnnotationDigestVerified": true,
+    "ScreenshotDigestVerified": true
+  },
+  "GeometryReview": {
+    "TextBoundsConfirmed": true,
+    "ButtonBoundsConfirmed": true,
+    "CoordinateSpace": "ScreenshotPixels",
+    "SafeClickAreaConfirmed": true
+  },
+  "Reviewer": {
+    "Id": "jay30",
+    "ReviewedAtUtc": "2026-10-21T06:08:00Z",
+    "Notes": "Task button visually identified; geometry review pending."
+  },
+    "Decision": {
+    "Status": "Approved",
+    "GroundTruthApproved": true,
+    "ClickAuthorized": true
+  },
+  "Execution": {
+    "SnapshotId": null,
+    "TargetId": null,
+    "OperatorConfirmedAtUtc": null,
+    "EvidenceRegistered": false,
+    "ClickAttempts": 0,
+    "ReplayRejected": null
+  }
+}
