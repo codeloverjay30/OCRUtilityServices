@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Issue50ApprovalTool/Issue50ApprovalTool.csproj" />
   <Project Path="OCRUtilityServices.AnnotationTool/OCRUtilityServices.AnnotationTool.csproj" />
   <Project Path="OCRUtilityServices.IntegrationTests/OCRUtilityServices.IntegrationTests.csproj" />
   <Project Path="OCRUtilityServices.Tests/OCRUtilityServices.Tests.csproj" />
