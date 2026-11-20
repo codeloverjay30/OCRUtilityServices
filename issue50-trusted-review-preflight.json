@@ -1,0 +1,18 @@
+{
+  "Status": "BLOCKED",
+  "Reason": "Preflight cannot grant signed authorization; reviewer decision and signature must be verified independently.",
+  "ExpectedScreenshotSha256": "1B5739E711FF97E211326CB3D6009E2E1A19421D8BEA529A922E0B993EA0E34D",
+  "MatchingScreenshotFiles": [
+    {
+      "Path": "D:\\workspace\\utility_packages\\modules\\OCR\\OCRUtilityServices\\OCRUtilityServices.IntegrationTests\\TestData\\Issue48\\Screenshots\\task-home-original.png",
+      "Sha256": "1B5739E711FF97E211326CB3D6009E2E1A19421D8BEA529A922E0B993EA0E34D"
+    }
+  ],
+  "AnnotationSha256Matches": true,
+  "ActualAnnotationSha256": "F5CC6CB7BD3AA936D9C82A59D01F0BFB7DCFBB3E9EFC39E979ECA6BDCFEE0C14",
+  "ReviewedDecisionReady": false,
+  "SignatureVerified": false,
+  "ProductionClickAuthorized": false,
+  "CandidateFilesScanned": 1,
+  "GeneratedAtUtc": "2026-10-21T03:50:42.7185677+00:00"
+}

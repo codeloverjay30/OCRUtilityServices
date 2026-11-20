@@ -1,0 +1,20 @@
+{
+  "Fixture": "task-home-original.png",
+  "TargetText": "任務",
+  "Status": "Reviewed",
+  "Reviewer": "jay30",
+  "ImageWidth": 2340,
+  "ImageHeight": 1080,
+  "TextBounds": {
+    "X": 556,
+    "Y": 917,
+    "Width": 51,
+    "Height": 18
+  },
+  "ButtonBounds": {
+    "X": 515,
+    "Y": 815,
+    "Width": 135,
+    "Height": 130
+  }
+}

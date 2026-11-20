@@ -1,0 +1,15 @@
+{
+  "SchemaVersion": "1.0",
+  "RunId": "Issue50-20261025T0743591523436Z-ce4ea52d9b2b",
+  "CreatedAtUtc": "2026-10-25T15:43:59.1861398+08:00",
+  "ReviewerId": "jay30",
+  "ReviewStatus": "IndependentReviewImported",
+  "ScreenshotFile": "task-home-original.png",
+  "ScreenshotSha256": "1B5739E711FF97E211326CB3D6009E2E1A19421D8BEA529A922E0B993EA0E34D",
+  "AnnotationFile": "task-home.ground-truth.reviewed.json",
+  "AnnotationSha256": "F5CC6CB7BD3AA936D9C82A59D01F0BFB7DCFBB3E9EFC39E979ECA6BDCFEE0C14",
+  "ReviewFile": "task-home.review.json",
+  "ApprovalFile": null,
+  "ReviewSha256": "16DF2F31CA8EFB261574E0BA34222552003BD51A16C54490FEFF5B0B3B4331C6",
+  "ReviewImportedAtUtc": "2026-10-25T07:58:59.5706246+00:00"
+}
