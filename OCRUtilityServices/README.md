@@ -41,3 +41,7 @@ Utility packages to perform OCR and analyze its results
 ## 2.6.0
 ### Fixed
 + See [OmniAppium issue `#50`](https://github.com/codeloverjay30/OmniAppium/issues/50)
+
+## 3.0.0
+### Update fix
+add bridge to execute Python script (using PaddleOcr Python API) and crop image.
