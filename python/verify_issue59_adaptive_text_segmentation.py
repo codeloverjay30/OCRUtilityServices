@@ -357,9 +357,23 @@ def adaptive_tiles(image: Image.Image, parent: dict[str, Any],
         for left in range(math.floor(x1), math.ceil(x2) - width + 1, step):
             proposals.append((2.0, (max(0, left), top,
                                     min(iw, left + width), bottom)))
-    seen = set()
-    unique = []
-    for score, tile in sorted(proposals, key=lambda item: item[0]):
+    # Reserve up to two widths at each endpoint before ranking interior crops.
+    # The outer padding applied by scan_image retains strokes beyond the parent box.
+    left_edge, right_edge = math.floor(x1), math.ceil(x2)
+    endpoint_tiles = []
+    for character_count in (3.7, 4.0):
+        width = round(h * character_count)
+        if left_edge + width < right_edge:
+            endpoint_tiles.extend((
+                (left_edge, top, left_edge + width, bottom),
+                (right_edge - width, top, right_edge, bottom),
+            ))
+
+    # Preserve a slot for the original ranking when the budget is tight.
+    reserved = list(dict.fromkeys(endpoint_tiles))[:max(0, max_per_parent - 1)]
+    seen = set(reserved)
+    unique = list(reserved)
+    for _, tile in sorted(proposals, key=lambda item: item[0]):
         if tile in seen or tile[2] - tile[0] < 20:
             continue
         seen.add(tile)
