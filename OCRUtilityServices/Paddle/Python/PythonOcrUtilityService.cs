@@ -1,9 +1,10 @@
 using System.IO.Abstractions;
-using CoordinateUtilityServices;
+using OCRUtilityServices.Internal;
 using OCRUtilityServices.Models;
 using OCRUtilityServices.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using Rectangle = CoordinateUtilityServices.Rectangle;
 
 namespace OCRUtilityServices.Paddle.Python;
@@ -31,23 +32,22 @@ public sealed class PythonOcrUtilityService : IOCRUtilityService
 
     /// <inheritdoc/>
     public Task<OcrResult> RecognizeAsync(byte[] imageBuffer, string languageTag, CancellationToken cancellationToken = default) =>
-        RecognizeCoreAsync(imageBuffer, languageTag, cancellationToken);
+        RecognizeCoreAsync(imageBuffer, languageTag, null, cancellationToken);
 
     /// <inheritdoc/>
     public Task<OcrResult> RecognizeAsync(byte[] imageBuffer, OcrRecognitionOptions options, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(options);
-        if (options.Region is not null)
-            throw new NotSupportedException("Python OCR regional recognition is not implemented.");
-        return RecognizeCoreAsync(imageBuffer, options.LanguageTag ?? "zh-TW", cancellationToken);
+        return RecognizeCoreAsync(imageBuffer, options.LanguageTag ?? "zh-TW", options.Region, cancellationToken);
     }
 
     /// <inheritdoc/>
     public Task<OcrResult> RecognizeRegionAsync(byte[] imageBuffer, Rectangle region, string languageTag, CancellationToken cancellationToken = default) =>
-        throw new NotSupportedException("Python OCR regional recognition is not implemented.");
+        RecognizeCoreAsync(imageBuffer, languageTag, region, cancellationToken);
 
     /// <summary>Validates the source image and deletes the temporary input after OCR.</summary>
-    private async Task<OcrResult> RecognizeCoreAsync(byte[] imageBuffer, string languageTag, CancellationToken cancellationToken)
+    private async Task<OcrResult> RecognizeCoreAsync(
+        byte[] imageBuffer, string languageTag, Rectangle? region, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(imageBuffer);
         if (imageBuffer.Length == 0)
@@ -58,14 +58,46 @@ public sealed class PythonOcrUtilityService : IOCRUtilityService
             throw new NotSupportedException("Python OCR supports Traditional Chinese only.");
         cancellationToken.ThrowIfCancellationRequested();
         using Image<Rgb24> image = Image.Load<Rgb24>(imageBuffer);
+        if (region is { } crop)
+        {
+            OcrRegionGeometry.ValidateWithinImage(crop, (uint)image.Width, (uint)image.Height);
+            int left = checked((int)crop.TopLeft.X);
+            int top = checked((int)crop.TopLeft.Y);
+            int width = checked((int)crop.Width);
+            int height = checked((int)crop.Height);
+            if (left != crop.TopLeft.X || top != crop.TopLeft.Y ||
+                width != crop.Width || height != crop.Height)
+            {
+                throw new ArgumentOutOfRangeException(nameof(region), "OCR regions must use whole pixels.");
+            }
+
+            image.Mutate(operation => operation.Crop(
+                new SixLabors.ImageSharp.Rectangle(left, top, width, height)));
+        }
+
         string tempPath = _fileSystem.Path.Combine(_fileSystem.Path.GetTempPath(),
             "issue59-" + Guid.NewGuid().ToString("N") + ".png");
         try
         {
-            await _fileSystem.File.WriteAllBytesAsync(tempPath, imageBuffer, cancellationToken).ConfigureAwait(false);
+            if (region is null)
+            {
+                await _fileSystem.File.WriteAllBytesAsync(tempPath, imageBuffer, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                await using var stream = _fileSystem.File.Open(tempPath, FileMode.CreateNew, FileAccess.Write);
+                await image.SaveAsPngAsync(stream, cancellationToken).ConfigureAwait(false);
+            }
+
             string json = await _runner.RunAsync(tempPath, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            return PythonOcrContractAdapter.Convert(json, image.Width, image.Height);
+            OcrResult result = PythonOcrContractAdapter.Convert(json, image.Width, image.Height);
+            if (region is not { } sourceRegion)
+                return result;
+
+            var sourceLines = result.Lines.Select(line => new OcrTextLine(line.Text,
+                OcrRegionGeometry.TranslateToSourceCoordinates(line.Bounds, sourceRegion))).ToArray();
+            return new OcrResult(result.Text, sourceLines);
         }
         finally
         {
